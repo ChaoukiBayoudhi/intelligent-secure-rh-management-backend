@@ -1,5 +1,6 @@
 package tn.sesame.rh_management_backend.Entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -41,7 +42,13 @@ public class HRDocument {
             cascade = CascadeType.ALL)
     @JoinColumn(name = "owner_id")
     Employee employee;
+
+    @ElementCollection
+    @CollectionTable(name = "document_tags", joinColumns = @JoinColumn(name = "document_id"))
+
     Set<String> tags=new HashSet<>();
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
+
     Instant uploadedAt;
     String checkSum;
 

@@ -1,5 +1,6 @@
 package tn.sesame.rh_management_backend.Entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -38,6 +39,9 @@ public class User {
     @Size(min = 8)
     @JsonIgnore
     String password;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
     @JsonIgnore
     Set<UserRole> roles=new HashSet<>();
     boolean mfaEnabled;
@@ -46,8 +50,11 @@ public class User {
     boolean emailVerified;
     boolean accountLocked;
     int failedLoginAttempts;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
     Instant lastLoginAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
     Instant createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
     Instant updateAt;
     LocalDateTime lockedUntil;
 
