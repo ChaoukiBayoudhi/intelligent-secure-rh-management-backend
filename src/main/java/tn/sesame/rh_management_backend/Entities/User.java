@@ -26,7 +26,7 @@ import java.util.UUID;
 @ToString(exclude={"password","mfaSecret"})
 @EqualsAndHashCode(of="email")
 @Table(name = "users",
-uniqueConstraints = @UniqueConstraint(columnNames = {"email"})
+uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -52,6 +52,6 @@ public class User {
     LocalDateTime lockedUntil;
 
     //the relationship with User
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user",fetch = FetchType.LAZY)
     Employee employee;
 }

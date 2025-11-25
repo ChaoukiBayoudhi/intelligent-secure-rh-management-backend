@@ -11,6 +11,8 @@ import tn.sesame.rh_management_backend.Enumerations.EmployeeJobTitle;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -21,21 +23,25 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude={"password","mfaSecret"})
-@EqualsAndHashCode(of="email")
+@ToString(exclude={"user"})
+@EqualsAndHashCode(of="employeeNumber")
 @Table(name = "employees",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"email"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
-    @OneToOne
+    @NonNull
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="user_id")
     User user;
+    @NonNull
     @Column(name = "employee_number",length = 8,unique = true)
     String employeeNumber;
+    @NonNull
     String firstName;
+    @NonNull
     String lastName;
     @Enumerated(EnumType.STRING)
     EmployeeDepartment department;
@@ -46,7 +52,19 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     ContractType contract;
     BigDecimal salary;
-    @Column(name = "manager_id")
-    UUID managerId;
+
+    //reflexive relationship
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manager_id")
+    Employee manager;
+
+    @OneToMany(mappedBy = "manager",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+    Set<Employee> subordinates=new HashSet<>();
+
+    @OneToMany(mappedBy = "employee",
+            fetch = FetchType.LAZY)
+    Set<HRDocument> documents=new HashSet<>();
 
 }
