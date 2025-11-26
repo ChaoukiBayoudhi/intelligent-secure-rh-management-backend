@@ -89,6 +89,10 @@ public class Employee {
     @JsonIgnoreProperties("manager")
     Set<Employee> subordinates=new HashSet<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id")
+    Employee employee;
+
     @OneToMany(mappedBy = "employee",fetch = FetchType.LAZY)
     @JsonIgnoreProperties("employee")
     Set<HRDocument> documents=new HashSet<>();
