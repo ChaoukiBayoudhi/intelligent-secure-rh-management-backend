@@ -48,7 +48,6 @@ public class HRDocument {
 
     Set<String> tags=new HashSet<>();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
-
     Instant uploadedAt;
     String checkSum;
 
