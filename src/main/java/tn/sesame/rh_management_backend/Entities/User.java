@@ -7,14 +7,16 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import tn.sesame.rh_management_backend.Enumerations.UserRole;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
+@Builder
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor(staticName = "of")
@@ -26,7 +28,7 @@ import java.util.UUID;
 @EqualsAndHashCode(of="email")
 @Table(name = "users",
 uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
@@ -43,11 +45,14 @@ public class User {
     @JsonIgnore
     String password;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+//    @Enumerated(EnumType.STRING)
+//    @JsonIgnore
+//    Set<UserRole> roles=new HashSet<>();
     @Enumerated(EnumType.STRING)
-    @JsonIgnore
-    Set<UserRole> roles=new HashSet<>();
+    @NonNull
+    UserRole role;
 
     boolean mfaEnabled;
     String mfaSecret;
@@ -67,4 +72,34 @@ public class User {
     @OneToOne(mappedBy = "user",fetch = FetchType.LAZY)
     @JsonIgnoreProperties("user")
     Employee employee;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("Role_"+role));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
+    }
 }

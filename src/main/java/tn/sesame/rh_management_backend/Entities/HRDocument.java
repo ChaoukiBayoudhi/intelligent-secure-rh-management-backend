@@ -11,7 +11,7 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-
+@Builder
 @Entity
 @Accessors(fluent = true)//calling the getters and setters without using the prefixes get and set
 @FieldDefaults(level = AccessLevel.PRIVATE)

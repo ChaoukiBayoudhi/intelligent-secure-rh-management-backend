@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 import java.time.Instant;
 import java.util.UUID;
 import java.util.Vector;
-
+@Builder
 @Entity
 @Accessors(fluent = true)//calling the getters and setters without using the prefixes get and set
 @FieldDefaults(level = AccessLevel.PRIVATE)

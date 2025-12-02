@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-
+@Builder
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Accessors(fluent = true)
