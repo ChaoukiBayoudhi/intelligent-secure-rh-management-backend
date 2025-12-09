@@ -6,9 +6,10 @@ import tn.sesame.rh_management_backend.Entities.Employee;
 import tn.sesame.rh_management_backend.Enumerations.EmployeeDepartment;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
-    Employee findByEmployeeNumber(String employeeNumber);
+    Optional<Employee> findByEmployeeNumber(String employeeNumber);
     Collection<Employee> findByDepartment(EmployeeDepartment department);
 }
