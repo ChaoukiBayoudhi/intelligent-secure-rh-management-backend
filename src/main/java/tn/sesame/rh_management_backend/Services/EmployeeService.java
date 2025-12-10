@@ -22,9 +22,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EmployeeService{
-    @Autowired
+    //@Autowired
+    //optional with the use of @RequiredArgsConstructor
     private final EmployeeRepository employeeRepository;
-    @Autowired
+    //@Autowired
     private final UserRepository userRepository;
 
     @Transactional
