@@ -51,6 +51,8 @@ public class User implements UserDetails {
 //    @JsonIgnore
 //    Set<UserRole> roles=new HashSet<>();
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)               // 1. Enforces NOT NULL in the Database Schema
+    @NotNull(message = "Role is required")  // 2. Returns 400 Bad Request if missing in JSON
     @NonNull
     UserRole role;
 
@@ -75,7 +77,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("Role_"+role));
+        return List.of(new SimpleGrantedAuthority("ROLE_"+role.name()));
     }
 
     @Override

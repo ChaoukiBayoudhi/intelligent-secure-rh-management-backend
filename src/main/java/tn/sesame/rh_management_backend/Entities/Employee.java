@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import tn.sesame.rh_management_backend.Enumerations.ContractType;
 import tn.sesame.rh_management_backend.Enumerations.EmployeeDepartment;
 import tn.sesame.rh_management_backend.Enumerations.EmployeeJobTitle;
+import tn.sesame.rh_management_backend.Validations.ValidSalaryRange;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -29,6 +30,7 @@ import java.util.UUID;
 @ToString(exclude={"user", "subordinates", "documents", "manager"})
 @EqualsAndHashCode(of="employeeNumber")
 @Table(name = "employees")
+@ValidSalaryRange
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
