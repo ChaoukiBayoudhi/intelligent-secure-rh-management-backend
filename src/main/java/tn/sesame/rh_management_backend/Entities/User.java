@@ -68,6 +68,7 @@ public class User implements UserDetails {
     Instant createdAt;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
     Instant updateAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
     LocalDateTime lockedUntil;
 
     //the relationship with User
