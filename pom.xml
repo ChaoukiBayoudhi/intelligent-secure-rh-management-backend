@@ -106,6 +106,18 @@
             <version>0.12.5</version>
             <scope>runtime</scope>
         </dependency>
+        <!-- OAuth2.1 Resource Server - For validating OAuth2 JWT tokens -->
+        <!-- This allows your application to act as a resource server that accepts OAuth2 tokens -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+        <!-- OAuth2.1 Client - For OAuth2 login flows (Google, GitHub, etc.) -->
+        <!-- This allows users to login using external OAuth2 providers -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

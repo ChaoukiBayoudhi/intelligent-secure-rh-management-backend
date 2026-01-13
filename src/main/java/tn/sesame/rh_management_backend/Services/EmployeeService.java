@@ -11,9 +11,9 @@ import tn.sesame.rh_management_backend.Entities.User;
 import tn.sesame.rh_management_backend.Repositories.EmployeeRepository;
 import tn.sesame.rh_management_backend.Repositories.UserRepository;
 import tn.sesame.rh_management_backend.dto.EmployeeCreateRequest;
-import tn.sesame.rh_management_backend.dto.EmployeeDTO;
+import tn.sesame.rh_management_backend.dto.EmployeeDto;
 import tn.sesame.rh_management_backend.dto.EmployeeUpdateRequest;
-import tn.sesame.rh_management_backend.dto.UserDTO;
+import tn.sesame.rh_management_backend.dto.UserDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,7 +28,7 @@ public class EmployeeService {
 
     @PreAuthorize("hasAnyRole('HR_MANAGER', 'ADMIN')")
     @Transactional
-    public EmployeeDTO createEmployee(EmployeeCreateRequest request) {
+    public EmployeeDto createEmployee(EmployeeCreateRequest request) {
         // Check if employee number already exists
         if (employeeRepository.findByEmployeeNumber(request.employeeNumber()).isPresent()) {
             throw new tn.sesame.rh_management_backend.exceptions.ConflictException("Employee number already exists");
@@ -67,7 +67,7 @@ public class EmployeeService {
 
     @PreAuthorize("hasAnyRole('MANAGER', 'HR_MANAGER', 'ADMIN')")
     @Transactional(readOnly = true)
-    public List<EmployeeDTO> getAllEmployees() {
+    public List<EmployeeDto> getAllEmployees() {
         return employeeRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -75,7 +75,7 @@ public class EmployeeService {
 
     @PreAuthorize("hasAnyRole('EMPLOYEE', 'MANAGER', 'HR_MANAGER', 'ADMIN')")
     @Transactional(readOnly = true)
-    public EmployeeDTO getEmployeeById(UUID id) {
+    public EmployeeDto getEmployeeById(UUID id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new tn.sesame.rh_management_backend.exceptions.NotFoundException("Employee not found"));
 
@@ -87,7 +87,7 @@ public class EmployeeService {
 
     @PreAuthorize("hasAnyRole('EMPLOYEE', 'MANAGER', 'HR_MANAGER', 'ADMIN')")
     @Transactional(readOnly = true)
-    public EmployeeDTO getEmployeeByNumber(String employeeNumber) {
+    public EmployeeDto getEmployeeByNumber(String employeeNumber) {
         Employee employee = employeeRepository.findByEmployeeNumber(employeeNumber)
                 .orElseThrow(() -> new tn.sesame.rh_management_backend.exceptions.NotFoundException("Employee not found"));
 
@@ -99,7 +99,7 @@ public class EmployeeService {
 
     @PreAuthorize("hasAnyRole('MANAGER', 'HR_MANAGER', 'ADMIN')")
     @Transactional(readOnly = true)
-    public List<EmployeeDTO> getEmployeesByDepartment(String department) {
+    public List<EmployeeDto> getEmployeesByDepartment(String department) {
         return employeeRepository.findByDepartment(department).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -107,7 +107,7 @@ public class EmployeeService {
 
     @PreAuthorize("hasAnyRole('HR_MANAGER', 'ADMIN')")
     @Transactional
-    public EmployeeDTO updateEmployee(UUID id, EmployeeUpdateRequest request) {
+    public EmployeeDto updateEmployee(UUID id, EmployeeUpdateRequest request) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new tn.sesame.rh_management_backend.exceptions.NotFoundException("Employee not found"));
 
@@ -167,8 +167,8 @@ public class EmployeeService {
         }
     }
 
-    private EmployeeDTO convertToDTO(Employee employee) {
-        EmployeeDTO.EmployeeDTOBuilder builder = EmployeeDTO.builder()
+    private EmployeeDto convertToDTO(Employee employee) {
+        EmployeeDto.EmployeeDtoBuilder builder = EmployeeDto.builder()
                 .id(employee.id())
                 .employeeNumber(employee.employeeNumber())
                 .firstName(employee.firstName())
@@ -185,7 +185,7 @@ public class EmployeeService {
         }
 
         if (employee.user() != null) {
-            builder.user(new UserDTO(
+            builder.user(new UserDto(
                     employee.user().getId(),
                     employee.user().getEmail(),
                     employee.user().getRole(),

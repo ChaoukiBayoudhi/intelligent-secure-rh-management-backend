@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tn.sesame.rh_management_backend.Entities.User;
 import tn.sesame.rh_management_backend.Repositories.UserRepository;
-import tn.sesame.rh_management_backend.dto.UserDTO;
+import tn.sesame.rh_management_backend.dto.UserDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +20,7 @@ public class UserService {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     @Transactional(readOnly = true)
-    public List<UserDTO> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -28,14 +28,14 @@ public class UserService {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     @Transactional(readOnly = true)
-    public UserDTO getUserById(UUID id) {
+    public UserDto getUserById(UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new tn.sesame.rh_management_backend.exceptions.NotFoundException("User not found"));
         return convertToDTO(user);
     }
 
     @Transactional(readOnly = true)
-    public UserDTO getUserByEmail(String email) {
+    public UserDto getUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
         if (user == null) {
             throw new tn.sesame.rh_management_backend.exceptions.NotFoundException("User not found");
@@ -53,7 +53,7 @@ public class UserService {
 
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
-    public UserDTO lockUser(UUID id) {
+    public UserDto lockUser(UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new tn.sesame.rh_management_backend.exceptions.NotFoundException("User not found"));
         user.setAccountLocked(true);
@@ -63,7 +63,7 @@ public class UserService {
 
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
-    public UserDTO unlockUser(UUID id) {
+    public UserDto unlockUser(UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new tn.sesame.rh_management_backend.exceptions.NotFoundException("User not found"));
         user.setAccountLocked(false);
@@ -73,8 +73,8 @@ public class UserService {
         return convertToDTO(user);
     }
 
-    private UserDTO convertToDTO(User user) {
-        return new UserDTO(
+    private UserDto convertToDTO(User user) {
+        return new UserDto(
                 user.getId(),
                 user.getEmail(),
                 user.getRole(),

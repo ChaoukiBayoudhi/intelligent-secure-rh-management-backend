@@ -38,12 +38,16 @@ public class User implements UserDetails {
     @Email(message = "Invalid email format")
     String email;
 
-    @NonNull
-    @Size(min = 8, message = "Password must be at least 8 characters long")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$",
-             message = "Password must contain at least one digit, one lowercase, one uppercase, and one special character")
+    // Password field - nullable for OAuth2 users who don't have passwords
+    // Validation is handled at the service/DTO level, not entity level
+    // This allows OAuth2 users to have null/empty passwords
     @JsonIgnore
     String password;
+    
+    // Track OAuth2 provider for users who login via OAuth2
+    // This helps identify authentication method and enables account linking
+    @Column(name = "oauth2_provider")
+    String oauth2Provider;
 
 //    @ElementCollection(fetch = FetchType.EAGER)
 //    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))

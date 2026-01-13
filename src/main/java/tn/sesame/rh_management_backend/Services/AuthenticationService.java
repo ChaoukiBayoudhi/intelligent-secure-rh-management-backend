@@ -174,9 +174,17 @@ public class AuthenticationService {
             throw new tn.sesame.rh_management_backend.exceptions.NotFoundException("User not found");
         }
 
-        // Verify current password
-        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-            throw new tn.sesame.rh_management_backend.exceptions.BadRequestException("Current password is incorrect");
+        // Check if user has a password (OAuth2 users might not have passwords)
+        // If user doesn't have a password, they can set one without providing current password
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            // User has existing password - verify current password
+            if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+                throw new tn.sesame.rh_management_backend.exceptions.BadRequestException("Current password is incorrect");
+            }
+        } else {
+            // OAuth2 user without password - allow setting password without current password
+            // This enables OAuth2 users to set a password for email/password login
+            // You might want to add additional verification (e.g., email confirmation) here
         }
 
         // Update password
