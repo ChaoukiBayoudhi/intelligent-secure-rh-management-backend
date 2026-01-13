@@ -33,13 +33,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String userEmail;
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ") || authHeader.length() <= 7) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        jwt = authHeader.substring(7);
+        jwt = authHeader.substring(7).trim().replace("\\s", "");
         try {
+
+            // Check if the resulting string is a valid JWT structure (3 parts separated by dots)
+            if (jwt.split("\\.").length != 3) {
+                filterChain.doFilter(request, response);
+                return;
+            }
             userEmail = jwtUtil.extractUsername(jwt);
 
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {

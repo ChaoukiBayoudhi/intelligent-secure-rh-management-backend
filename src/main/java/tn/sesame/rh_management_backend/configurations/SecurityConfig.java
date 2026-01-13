@@ -134,12 +134,12 @@ public class SecurityConfig {
                 // Configure OAuth2 Resource Server
                 // This allows the application to validate OAuth2 JWT tokens
                 // You can use this if you want to accept tokens from external OAuth2 providers
-                .oauth2ResourceServer(oauth2 -> oauth2
+                /*.oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
                                 // Use the JWT authentication converter to extract roles from OAuth2 tokens
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter)
                         )
-                )
+                )*/
                 
                 // Configure custom authentication provider (for email/password login)
                 .authenticationProvider(authenticationProvider())

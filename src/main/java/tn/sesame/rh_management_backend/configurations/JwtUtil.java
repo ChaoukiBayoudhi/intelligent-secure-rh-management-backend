@@ -119,12 +119,18 @@ public class JwtUtil {
      * @return All claims from the token
      */
     private Claims extractAllClaims(String token) {
+
+        //ensure that the token is not blank or full of whitespace before parsing it
+        if(token == null || token.isBlank()) {
+            throw new IllegalArgumentException("Jwt Token cannot be blank or full of whitespace");
+        }
+
         // Compatible with JJWT 0.12.x API
         // This validates the token signature and extracts the payload
         return Jwts.parser()
                 .verifyWith(getSigningKey())
                 .build()
-                .parseSignedClaims(token)
+                .parseSignedClaims(token.trim())
                 .getPayload();
     }
 
