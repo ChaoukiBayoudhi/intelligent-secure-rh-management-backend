@@ -5,8 +5,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtDecoders;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * OAuth2.1 Resource Server Configuration
@@ -37,8 +41,11 @@ public class OAuth2ResourceServerConfig {
     // This is the base URL of the OAuth2 authorization server
     // For external providers (Auth0, Okta), set this to their issuer URI
     // For our own tokens, this should match the application base URL
-    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri:http://localhost:9995}")
-    private String issuerUri;
+    //@Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri:http://localhost:9995}")
+    //private String issuerUri;
+
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
     /**
      * JWT Decoder Bean
@@ -58,8 +65,8 @@ public class OAuth2ResourceServerConfig {
         // This allows configuration without code changes
         // Example for Auth0: https://your-domain.auth0.com/
         // Example for Okta: https://your-domain.okta.com/oauth2/default
-        return JwtDecoders.fromIssuerLocation(issuerUri);
-    }
+        SecretKey secretKey = new SecretKeySpec(jwtSecret.getBytes(), "HmacSHA256");
+        return NimbusJwtDecoder.withSecretKey(secretKey).build();    }
 
     /**
      * JWT Authentication Converter
